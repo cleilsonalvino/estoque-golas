@@ -9,12 +9,18 @@ const Dateatual = () => {
           });
 
 
+
   return (
-    <fieldset>
-    <legend>Data: </legend>
-    <span style={{ backgroundColor: "white", padding: 5, color: "black" }}>
-        {dataPedidoo}
-    </span>
+    <fieldset className='options-select'>
+    <legend>Data: {dataPedidoo}</legend>
+      <legend>Seu nome: </legend>
+      <select>
+          <option value="">Selecione seu nome</option>
+          <option value="Cleilson">CLEILSON</option>
+          <option value="CRISTIANO">CRISTIANO</option>
+          <option value="CEZAR">CEZAR</option>
+          <option value="SIMONE">SIMONE</option>
+      </select>
   </fieldset>
   )
 }

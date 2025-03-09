@@ -1,23 +1,42 @@
 import { useState, useEffect } from "react";
+import Sendaction from "./Sendaction";
+import Quantity from "./Quantity";
 
 const apiUrl = "https://sheetdb.io/api/v1/c3b94fdkjdhv1";
 
 export default function EstoqueSelector() {
   const [itens, setItens] = useState([]);
   const [itemData, setItemData] = useState({});
-  const [selectedId, setSelectedId] = useState("");
-  const [quantidade, setQuantidade] = useState("");
-  const [cor, setCor] = useState("");
+  const [selectedGolaId, setSelectedGolaId] = useState("");
+  const [selectedPunhoId, setSelectedPunhoId] = useState("");
+  const [golaInfo, setGolaInfo] = useState({ cor: "", quantidade: "" });
+  const [punhoInfo, setPunhoInfo] = useState({ cor: "", quantidade: "" });
+    // Criamos estados separados
+const [tipoGola, setTipoGola] = useState("");
+const [tipoPunho, setTipoPunho] = useState("");
+
+const handleTipoChangeGola = (event) => {
+  setTipoGola(event.target.value);
+};
+
+const handleTipoChangePunho = (event) => {
+  setTipoPunho(event.target.value);
+};
 
   useEffect(() => {
     async function loadSheetDBData() {
       try {
         const response = await fetch(apiUrl);
         const data = await response.json();
-        
+
         const dataMap = {};
         data.forEach(item => {
-          dataMap[item.ID] = { GOLA: item.GOLA, COR: item.COR, QUANTIDADE: Number(item.QUANTIDADE), PUNHO: item.PUNHO };
+          dataMap[item.ID] = { 
+            GOLA: item.GOLA, 
+            PUNHO: item.PUNHO, 
+            COR: item.COR, 
+            QUANTIDADE: Number(item.QUANTIDADE) 
+          };
         });
 
         setItens(data);
@@ -30,31 +49,72 @@ export default function EstoqueSelector() {
     loadSheetDBData();
   }, []);
 
-  function updateQuantity(event) {
+  function updateGola(event) {
     const id = event.target.value;
-    setSelectedId(id);
+    setSelectedGolaId(id);
 
     if (id && itemData[id]) {
-      setQuantidade(itemData[id].QUANTIDADE);
-      setCor(itemData[id].COR);
+      setGolaInfo({ cor: itemData[id].COR, quantidade: itemData[id].QUANTIDADE });
     } else {
-      setQuantidade("");
-      setCor("");
+      setGolaInfo({ cor: "", quantidade: "" });
     }
   }
 
+  function updatePunho(event) {
+    const id = event.target.value;
+    setSelectedPunhoId(id);
+
+    if (id && itemData[id]) {
+      setPunhoInfo({ cor: itemData[id].COR, quantidade: itemData[id].QUANTIDADE });
+    } else {
+      setPunhoInfo({ cor: "", quantidade: "" });
+    }
+  }
+
+
+
   return (
     <div>
-      <p >Selecione a opção correspondente:</p>
-      <select id="tecidoSelect" value={selectedId} onChange={updateQuantity}>
-        <option value="">Escolha um tecido</option>
-        {itens.map(item => (
-          <option key={item.ID} value={item.ID}>{item.GOLA}</option>
-        ))}
-      </select>
+      {/* Seleção de Gola */}
+      <fieldset className="options-select">
+        <div>
+          <p>Selecione a Gola:</p>
+          <select value={selectedGolaId} onChange={updateGola}>
+            <option value="">Escolha uma gola</option>
+            {itens
+              .filter(item => item.GOLA) // Filtra apenas os que têm GOLA
+              .map(item => (
+                <option key={item.ID} value={item.ID}>{item.GOLA} - {item.COR}</option>
+              ))
+            }
+          </select>
+          <p>Cor: <strong>{golaInfo.cor}</strong></p>
+          <p>Quantidade: <strong>{golaInfo.quantidade}</strong></p>
+        </div>
+        <Quantity/>
+        <Sendaction tipo={tipoGola} onChange={handleTipoChangeGola} name={'gola'}/>
+      </fieldset>
 
-      <p>Cor: <strong>{cor}</strong></p>
-      <p>Quantidade: <strong>{quantidade}</strong></p>
+      {/* Seleção de Punho */}
+      <fieldset className="options-select">
+        <div>
+          <p>Selecione o Punho:</p>
+          <select value={selectedPunhoId} onChange={updatePunho}>
+            
+            <option value="">Escolha um punho</option>
+            {itens
+              .filter(item => item.PUNHO) // Filtra apenas os que têm PUNHO
+              .map(item => (
+                <option key={item.ID} value={item.ID}>{item.PUNHO} - {item.COR}</option>
+              ))
+            }
+          </select>
+          <p>Cor: <strong>{punhoInfo.cor}</strong></p>
+          <p>Quantidade: <strong>{punhoInfo.quantidade}</strong></p>
+        </div>
+        <Quantity/>
+        <Sendaction tipo={tipoPunho} onChange={handleTipoChangePunho} name={'punho'}/>
+      </fieldset>
     </div>
   );
 }

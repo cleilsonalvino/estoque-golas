@@ -2,8 +2,7 @@ import React from 'react'
 
 const Quantity = () => {
   return (
-    <fieldset>
-    <legend>Digite a quantidade: </legend>
+    <fieldset className='quantity'>
     <input
       type="number"
       id="adjustmentInput"

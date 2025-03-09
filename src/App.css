@@ -8,7 +8,7 @@ header{
 
 body{
   /*background-image: linear-gradient(45deg, #cfef00, #9fb800);*/
-  background-color: #333b00;
+  background-color: #000000;
   background-size: contain;
   color: #c4e201;
   font-style: oblique;
@@ -58,7 +58,10 @@ button:active {
   transform: scale(0.95);
 }
 
-
+fieldset{
+  border-top: none;
+  
+}
 
 select {
   padding: 10px;
@@ -130,7 +133,7 @@ label:active {
 }
 
 .custom-number-input {
-  width: 100px; /* Largura do input */
+  width: 100%; /* Largura do input */
   padding: 10px; /* Espaçamento interno */
   border: 2px solid #4CAF50; /* Borda verde */
   border-radius: 5px; /* Bordas arredondadas */
@@ -162,6 +165,15 @@ label:active {
   font-weight: bold;
   margin: 20px;
   text-align: center;
+}
+.quantity{
+  height: 6vh;
+  display: flex;
+  border: none;
+  flex-basis:120px;
+  text-align: center;
+  margin: auto;
+  align-items: start;
 }
 
 #result{
@@ -198,6 +210,13 @@ label:active {
   left: 0;
   border-radius: 4px;
   animation: jump7456 0.5s linear infinite;
+}
+
+.options-select{
+  display: flex;
+  flex-flow: row wrap;
+
+
 }
 
 @keyframes jump7456 {
