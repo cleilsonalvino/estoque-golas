@@ -1,4 +1,7 @@
 const Sendaction = ({ tipo, onChange, name }) => {
+
+  
+
   return (
     <fieldset>
       <legend>Selecione a opção correspondente:</legend>

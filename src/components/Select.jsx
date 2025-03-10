@@ -16,12 +16,38 @@ const [tipoGola, setTipoGola] = useState("");
 const [tipoPunho, setTipoPunho] = useState("");
 
 const handleTipoChangeGola = (event) => {
-  setTipoGola(event.target.value);
+  const tipo = event.target.value;
+  setTipoGola(tipo);
+
+  // Recupera o objeto do localStorage
+  let gola = JSON.parse(localStorage.getItem('gola')) || {};
+
+  // Adiciona ou atualiza o atributo "tipo"
+  gola.TIPO = tipo;
+
+  // Salva o objeto atualizado de volta no localStorage
+  localStorage.setItem('gola', JSON.stringify(gola));
+
+  console.log("Tipo atualizado para:", tipo);
 };
 
+
 const handleTipoChangePunho = (event) => {
-  setTipoPunho(event.target.value);
+  const tipo = event.target.value;
+  setTipoPunho(tipo);
+
+  // Recupera o objeto do localStorage
+  let punho = JSON.parse(localStorage.getItem('punho')) || {};
+
+  // Adiciona ou atualiza o atributo "tipo"
+  punho.tipo = tipo;
+
+  // Salva o objeto atualizado de volta no localStorage
+  localStorage.setItem('punho', JSON.stringify(punho));
+
+  console.log("Tipo atualizado para Punho:", tipo);
 };
+
 
   useEffect(() => {
     async function loadSheetDBData() {
@@ -52,6 +78,11 @@ const handleTipoChangePunho = (event) => {
   function updateGola(event) {
     const id = event.target.value;
     setSelectedGolaId(id);
+    localStorage.setItem('gola', JSON.stringify({
+      ID: id,
+      QUANTIDADE: itemData[id]?.QUANTIDADE
+    }))
+    console.log(id)
 
     if (id && itemData[id]) {
       setGolaInfo({ cor: itemData[id].COR, quantidade: itemData[id].QUANTIDADE });
@@ -64,12 +95,21 @@ const handleTipoChangePunho = (event) => {
     const id = event.target.value;
     setSelectedPunhoId(id);
 
+    // Armazena apenas o ID no localStorage
+    localStorage.setItem('punho', JSON.stringify({
+      ID: id,
+      QUANTIDADE: itemData[id]?.QUANTIDADE || 0 // Evita erro caso itemData[id] seja indefinido
+    }));
+
+    console.log(id);
+
     if (id && itemData[id]) {
       setPunhoInfo({ cor: itemData[id].COR, quantidade: itemData[id].QUANTIDADE });
     } else {
       setPunhoInfo({ cor: "", quantidade: "" });
     }
-  }
+}
+
 
 
 
