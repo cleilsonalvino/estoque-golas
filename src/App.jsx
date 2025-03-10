@@ -15,11 +15,7 @@ function App() {
     <Dateatual/>
     <Select/>
   <br />
-
-
 <Atuallyquantity/>
-
-  <br />
 </main>
   )
 }
