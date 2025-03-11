@@ -131,7 +131,7 @@ const handleTipoChangePunho = (event) => {
           <p>Cor: <strong>{golaInfo.cor}</strong></p>
           <p>Quantidade: <strong>{golaInfo.quantidade}</strong></p>
         </div>
-        <Quantity/>
+        <Quantity name={"gola"}/>
         <Sendaction tipo={tipoGola} onChange={handleTipoChangeGola} name={'gola'}/>
       </fieldset>
 
@@ -152,7 +152,7 @@ const handleTipoChangePunho = (event) => {
           <p>Cor: <strong>{punhoInfo.cor}</strong></p>
           <p>Quantidade: <strong>{punhoInfo.quantidade}</strong></p>
         </div>
-        <Quantity/>
+        <Quantity name={"punho"}/>
         <Sendaction tipo={tipoPunho} onChange={handleTipoChangePunho} name={'punho'}/>
       </fieldset>
     </div>
