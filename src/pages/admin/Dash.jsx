@@ -16,7 +16,7 @@ function Dash() {
   // Função para buscar os dados
   const fetchDados = async () => {
     try {
-      const response = await fetch("http://192.168.0.3:3000/trazer-dados");
+      const response = await fetch("https://estoque-golas-server.onrender.com/trazer-dados");
       if (!response.ok) throw new Error("Erro ao buscar os dados");
       const data = await response.json();
       setDados(data);
@@ -47,7 +47,7 @@ function Dash() {
   const handleUpdatePolo = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://192.168.0.3:3000/atualizar-polo/${editPolo.codigo}`, {
+      const response = await fetch(`https://estoque-golas-server.onrender.com/atualizar-polo/${editPolo.codigo}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

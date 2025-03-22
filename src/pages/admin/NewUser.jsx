@@ -12,7 +12,7 @@ function NewUserModal() {
       eadmin: eAdmin, // Enviando 0 ou 1
     };
 
-    fetch("http://192.168.0.3:3000/novousuario", {
+    fetch("https://estoque-golas-server.onrender.com/novousuario", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

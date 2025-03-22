@@ -16,7 +16,7 @@ function SubmitForm() {
 
   // Carregar os polos disponíveis
   useEffect(() => {
-    fetch("http://localhost:3000/trazer-dados") // Chame sua API para obter os polos
+    fetch("https://estoque-golas-server.onrender.com/trazer-dados") // Chame sua API para obter os polos
       .then((response) => response.json())
       .then((data) => {
         setPolos(data);
@@ -46,7 +46,7 @@ function SubmitForm() {
     };
 
     try {
-      const response = await fetch("http://localhost:3000/estoque", {
+      const response = await fetch("https://estoque-golas-server.onrender.com/estoque", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
