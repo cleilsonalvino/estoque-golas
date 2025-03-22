@@ -7,7 +7,7 @@
     "start": "concurrently \"npm run dev\" \"npm run server\"",
     "server": "node ./src/server/api.js",
     "dev": "vite --host",
-    "build": "vite build",
+    "build": "prisma generate && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
