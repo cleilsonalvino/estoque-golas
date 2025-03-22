@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Importar o hook useNavigate
+import { useNavigate } from "react-router-dom";
 import "./css/login.css";
 
 function Login() {
     const [nome, setNome] = useState("");
     const [senha, setSenha] = useState("");
-    const navigate = useNavigate(); // Criar a instância do navigate
+    const navigate = useNavigate();
 
     // Função para enviar os dados de login
     function verificarUsuario(e) {
@@ -13,7 +13,7 @@ function Login() {
 
         const dados = { nome, senha };
 
-        fetch("http://localhost:3000/login", {
+        fetch("http://192.168.0.3:3000/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -23,14 +23,15 @@ function Login() {
         .then((response) => response.json())
         .then((data) => {
             if (data.autenticado) {
-                if(data.usuario.Eadmin == 1){
-                    alert("Login bem-sucedido!");
-                    // Redirecionar para outra página (por exemplo, para o dashboard)
-                    navigate("/dashboard");
-                } else{
-                    navigate("/form")
-                }
+                // Salvar os dados do usuário no localStorage
+                localStorage.setItem('usuario', JSON.stringify(data.usuario));
 
+                if (data.usuario.Eadmin === 1) {
+                    alert("Login bem-sucedido!");
+                    navigate("/dashboard");
+                } else {
+                    navigate("/form");
+                }
             } else {
                 alert(data.mensagem);
             }

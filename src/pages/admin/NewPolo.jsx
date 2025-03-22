@@ -28,7 +28,7 @@ function NewPoloModal({refreshDados}) {
     setResponse(null);
 
     try {
-      const res = await fetch("http://localhost:3000/polos", {
+      const res = await fetch("http://192.168.0.3:3000/polos", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

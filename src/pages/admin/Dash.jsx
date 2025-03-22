@@ -4,20 +4,23 @@ import NewUser from "./NewUser";
 import NavBar from "../../components/NavBar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
-import SearchDados from "./SearchDados";
 
 function Dash() {
-  const [dados, setDados] = useState([]);
+  const [dados, setDados] = useState([]); // Dados completos dos polos
+  const [filteredDados, setFilteredDados] = useState([]); // Dados filtrados pela pesquisa
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState(''); // Termo de pesquisa
   const [editPolo, setEditPolo] = useState(null);
 
+  // Função para buscar os dados
   const fetchDados = async () => {
     try {
-      const response = await fetch("http://localhost:3000/trazer-dados");
+      const response = await fetch("http://192.168.0.3:3000/trazer-dados");
       if (!response.ok) throw new Error("Erro ao buscar os dados");
       const data = await response.json();
       setDados(data);
+      setFilteredDados(data); // Inicializa com todos os dados
       setLoading(false);
     } catch (err) {
       setError(err.message);
@@ -29,10 +32,22 @@ function Dash() {
     fetchDados();
   }, []);
 
+  // Função para filtrar os dados com base no termo de pesquisa
+  const handleSearch = () => {
+    if (searchTerm === '') {
+      setFilteredDados(dados); // Se não houver termo de pesquisa, mostra todos os dados
+    } else {
+      const results = dados.filter((item) =>
+        item.cor.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredDados(results); // Atualiza os dados filtrados
+    }
+  };
+
   const handleUpdatePolo = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:3000/atualizar-polo/${editPolo.codigo}`, {
+      const response = await fetch(`http://192.168.0.3:3000/atualizar-polo/${editPolo.codigo}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -65,11 +80,18 @@ function Dash() {
     <div className="contentDash">
       <NavBar />
       <main>
-        {/* Passa fetchDados como prop para NewPolo */}
         <div className="acoesDash">
           <NewPolo refreshDados={fetchDados} />
           <NewUser />
-          <SearchDados />
+        </div>
+        <div className="searchDados">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Digite a cor da polo"
+          />
+          <button onClick={handleSearch}>Pesquisar</button>
         </div>
         <div className="container mt-5">
           <h2>Lista de Polos</h2>
@@ -89,7 +111,7 @@ function Dash() {
                 </tr>
               </thead>
               <tbody>
-                {dados.map((item) => (
+                {filteredDados.map((item) => (
                   <tr key={item.codigo}>
                     <td>{item.codigo}</td>
                     <td>{item.cor}</td>

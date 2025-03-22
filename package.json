@@ -3,14 +3,15 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "scripts": {
-    "start": "concurrently \"npm run dev\" \"npm run server\"",
-    "server": "node ./src/server/api.js",
-    "dev": "vite --host",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
-  },
+"scripts": {
+  "start": "concurrently \"npm run dev\" \"npm run server\"",
+  "server": "node ./src/server/api.js",
+  "dev": "vite --host",
+  "build": "echo 'Não é necessário build para o backend'",
+  "lint": "eslint .",
+  "preview": "vite preview"
+},
+
   "dependencies": {
     "@prisma/client": "^6.5.0",
     "@prisma/extension-accelerate": "^1.3.0",

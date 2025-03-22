@@ -3,7 +3,6 @@
     height: 90vh;
     flex-flow: row wrap;
     justify-content: center;
-    background-color: lightgray;
 }
 
 .navbar{
@@ -13,6 +12,9 @@
 
 .searchDados{
     display: block;
+    width: 10%;
+    margin: auto;
+    text-align: center;
 }
 
 .acoesDash{

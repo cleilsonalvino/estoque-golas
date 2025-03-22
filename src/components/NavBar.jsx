@@ -2,6 +2,12 @@ import React from "react";
 import '../pages/admin/index.css'
 
 function NavBar() {
+
+  const logout = () => {
+    localStorage.removeItem('usuario');
+    navigate("/login"); // Redireciona para a tela de login
+  };
+
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
@@ -26,7 +32,7 @@ function NavBar() {
               <a className="nav-link" href="#">Link</a>
             </li>
           </ul>
-          <a href="/">Sair</a>
+          <a href="/" onClick={logout}>Sair</a>
         </div>
       </div>
     </nav>

@@ -97,6 +97,52 @@ app.post('/polos', async (req, res) => {
   }
 });
 
+app.post('/atualizar-polo/:codigo', async (req, res) => {
+  const { codigo } = req.params; // Pega o código da URL
+  const { cor, gola, punho } = req.body; // Pega os dados do corpo da requisição
+
+  try {
+    const poloAtualizado = await prisma.polo.update({
+      where: { codigo: codigo }, // Usa o código como chave única
+      data: {
+        cor, // Atualiza apenas os campos enviados
+        gola: gola ? { update: { quantidade: Number(gola.quantidade) } } : undefined,
+        punho: punho ? { update: { quantidade: Number(punho.quantidade) } } : undefined,
+      },
+    });
+    res.json(poloAtualizado);
+  } catch (error) {
+    console.error("Erro ao atualizar polo:", error);
+    res.status(500).json({ mensagem: "Erro ao atualizar o polo no banco de dados" });
+  }
+});
+
+app.get('/filtrar/:cor', async (req, res) => {
+  const { cor } = req.params; // Pega a cor da URL
+
+  try {
+    const polos = await prisma.polo.findMany({
+      where: {
+        cor: cor, // Filtra polos pela cor fornecida
+      },
+      include: {
+        gola: true, // Inclui a relação com a Gola
+        punho: true, // Inclui a relação com o Punho
+      },
+    });
+
+    if (polos.length === 0) {
+      return res.status(404).json({ mensagem: "Nenhum polo encontrado com essa cor" });
+    }
+
+    res.json(polos); // Retorna os polos encontrados
+  } catch (error) {
+    console.error("Erro ao filtrar polos por cor:", error);
+    res.status(500).json({ mensagem: "Erro ao filtrar polos no banco de dados" });
+  }
+});
+
+
 app.get('/select-func', async (req, res)=>{
   try{
     const usuarios = await prisma.usuarios.findMany({
@@ -119,9 +165,20 @@ app.get('/trazer-dados', async (req, res) => {
       select: {
         codigo: true,
         cor: true,
-        gola: true,
-        punho: true,
-      }, orderBy: 'asc'
+        gola: {
+          select: {
+            quantidade: true
+          }
+        },
+        punho: {
+          select: {
+            quantidade: true
+          }
+        }
+      },
+      orderBy: {
+        codigo: 'asc'
+      }
     });
     res.json(dados);
   } catch (error) {
@@ -130,25 +187,95 @@ app.get('/trazer-dados', async (req, res) => {
   }
 });
 
-app.post('/atualizar-polo/:codigo', async (req, res) => {
-  const { codigo } = req.params; // Pega o código da URL
-  const { cor, gola, punho } = req.body; // Pega os dados do corpo da requisição
+// Rota para registrar entrada/saída de golas/punhos
+app.post("/estoque", async (req, res) => {
+  const { codigoPolo, quantidade, tipo, golaPunho } = req.body;
+
+  // Verifica se o polo existe
+  const polo = await prisma.polo.findUnique({
+    where: {
+      codigo: codigoPolo,
+    },
+  });
+
+  if (!polo) {
+    return res.status(400).json({ success: false, message: "Polo não encontrado!" });
+  }
 
   try {
-    const poloAtualizado = await prisma.polo.update({
-      where: { codigo: codigo }, // Usa o código como chave única
-      data: {
-        cor, // Atualiza apenas os campos enviados
-        gola: gola ? { update: { quantidade: Number(gola.quantidade) } } : undefined,
-        punho: punho ? { update: { quantidade: Number(punho.quantidade) } } : undefined,
-      },
-    });
-    res.json(poloAtualizado);
+    // Verifica se a operação é sobre a gola ou punho
+    if (golaPunho === "gola") {
+      const gola = await prisma.gola.findUnique({
+        where: {
+          poloCodigo: codigoPolo,
+        },
+      });
+
+      // Verifica tipo de operação (entrada ou saída)
+      if (tipo === "entrada") {
+        await prisma.gola.update({
+          where: { poloCodigo: codigoPolo },
+          data: {
+            quantidade: gola ? gola.quantidade + quantidade : quantidade,
+          },
+        });
+      } else if (tipo === "saida") {
+        // Verifica se há golas suficientes para a saída
+        if (gola && gola.quantidade >= quantidade) {
+          await prisma.gola.update({
+            where: { poloCodigo: codigoPolo },
+            data: {
+              quantidade: gola.quantidade - quantidade,
+            },
+          });
+        } else {
+          return res.status(400).json({ success: false, message: "Quantidade insuficiente de golas!" });
+        }
+      } else {
+        return res.status(400).json({ success: false, message: "Tipo inválido. Use 'entrada' ou 'saida'." });
+      }
+    } else if (golaPunho === "punho") {
+      const punho = await prisma.punho.findUnique({
+        where: {
+          poloCodigo: codigoPolo,
+        },
+      });
+
+      // Verifica tipo de operação (entrada ou saída)
+      if (tipo === "entrada") {
+        await prisma.punho.update({
+          where: { poloCodigo: codigoPolo },
+          data: {
+            quantidade: punho ? punho.quantidade + quantidade : quantidade,
+          },
+        });
+      } else if (tipo === "saida") {
+        // Verifica se há punhos suficientes para a saída
+        if (punho && punho.quantidade >= quantidade) {
+          await prisma.punho.update({
+            where: { poloCodigo: codigoPolo },
+            data: {
+              quantidade: punho.quantidade - quantidade,
+            },
+          });
+        } else {
+          return res.status(400).json({ success: false, message: "Quantidade insuficiente de punhos!" });
+        }
+      } else {
+        return res.status(400).json({ success: false, message: "Tipo inválido. Use 'entrada' ou 'saida'." });
+      }
+    } else {
+      return res.status(400).json({ success: false, message: "golaPunho deve ser 'gola' ou 'punho'." });
+    }
+
+    return res.status(200).json({ success: true, message: "Entrada/saída registrada com sucesso!" });
   } catch (error) {
-    console.error("Erro ao atualizar polo:", error);
-    res.status(500).json({ mensagem: "Erro ao atualizar o polo no banco de dados" });
+    console.error(error);
+    return res.status(500).json({ success: false, message: "Erro ao processar a requisição." });
   }
 });
+
+
 
 async function startServer() {
   try {
