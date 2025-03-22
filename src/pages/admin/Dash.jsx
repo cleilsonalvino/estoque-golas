@@ -17,16 +17,21 @@ function Dash() {
   const fetchDados = async () => {
     try {
       const response = await fetch("https://estoque-golas-server.onrender.com/trazer-dados");
-      if (!response.ok) throw new Error("Erro ao buscar os dados");
+      if (!response.ok) throw new Error(`Erro ao buscar os dados: ${response.status}`);
+      
       const data = await response.json();
+      console.log("Dados recebidos:", data); // <--- Verificar o que está vindo
+      
       setDados(data);
-      setFilteredDados(data); // Inicializa com todos os dados
+      setFilteredDados(data);
       setLoading(false);
     } catch (err) {
+      console.error("Erro ao buscar os dados:", err);
       setError(err.message);
       setLoading(false);
     }
   };
+  
 
   useEffect(() => {
     fetchDados();
