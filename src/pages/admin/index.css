@@ -1,0 +1,35 @@
+.contentDash{
+    display: flex;
+    height: 90vh;
+    flex-flow: row wrap;
+    justify-content: center;
+    background-color: lightgray;
+}
+
+.navbar{
+    width: 100%;
+    height: 8vh;
+}
+
+.searchDados{
+    display: block;
+}
+
+.acoesDash{
+    display: flex;
+    justify-content: space-around;
+    flex-flow: row wrap;
+}
+
+main{
+    height: 70%;
+    width: 90%;
+}
+
+table{
+    margin: 10px;
+}
+
+button {
+    margin: 10px;
+}

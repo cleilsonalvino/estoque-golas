@@ -113,6 +113,43 @@ app.get('/select-func', async (req, res)=>{
   }
 })
 
+app.get('/trazer-dados', async (req, res) => {
+  try {
+    const dados = await prisma.polo.findMany({
+      select: {
+        codigo: true,
+        cor: true,
+        gola: true,
+        punho: true,
+      }, orderBy: 'asc'
+    });
+    res.json(dados);
+  } catch (error) {
+    console.error("Erro ao buscar dados:", error);
+    res.status(500).json({ mensagem: "Erro ao buscar dados no banco de dados" });
+  }
+});
+
+app.post('/atualizar-polo/:codigo', async (req, res) => {
+  const { codigo } = req.params; // Pega o código da URL
+  const { cor, gola, punho } = req.body; // Pega os dados do corpo da requisição
+
+  try {
+    const poloAtualizado = await prisma.polo.update({
+      where: { codigo: codigo }, // Usa o código como chave única
+      data: {
+        cor, // Atualiza apenas os campos enviados
+        gola: gola ? { update: { quantidade: Number(gola.quantidade) } } : undefined,
+        punho: punho ? { update: { quantidade: Number(punho.quantidade) } } : undefined,
+      },
+    });
+    res.json(poloAtualizado);
+  } catch (error) {
+    console.error("Erro ao atualizar polo:", error);
+    res.status(500).json({ mensagem: "Erro ao atualizar o polo no banco de dados" });
+  }
+});
+
 async function startServer() {
   try {
     await prisma.$connect();
@@ -126,5 +163,5 @@ async function startServer() {
   }
 }
 
-// startServer();
+startServer();
 
