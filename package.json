@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "start": "concurrently \"npm run dev\" \"npm run server\"",
+    "start": "npm run server",
     "server": "node ./src/server/api.js",
     "dev": "vite --host",
     "build": "prisma generate && vite build",
@@ -14,6 +14,7 @@
   "dependencies": {
     "@prisma/client": "^6.5.0",
     "@prisma/extension-accelerate": "^1.3.0",
+    "@vercel/node": "^5.1.14",
     "bootstrap": "^5.3.3",
     "concurrently": "^9.1.2",
     "cors": "^2.8.5",
