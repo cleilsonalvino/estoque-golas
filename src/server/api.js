@@ -281,18 +281,13 @@ app.post("/estoque", async (req, res) => {
 
 
 
-async function startServer() {
-  try {
-    await prisma.$connect();
-    console.log('Banco conectado!');
-    app.listen(3000, () => {
-      console.log('Servidor rodando na porta 3000');
-    });
-  } catch (error) {
+prisma.$connect()
+  .then(() => console.log('Banco conectado!'))
+  .catch((error) => {
     console.error('Erro ao conectar ao banco:', error);
-    process.exit(1); // Encerra o processo se a conexão falhar
-  }
-}
+    process.exit(1); // Isso não é ideal no Vercel; veja abaixo
+  });
 
-startServer();
+// Exportar o app para o Vercel
+export default app;
 
