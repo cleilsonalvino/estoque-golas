@@ -7,12 +7,12 @@
     "theme_color": "#4CAF50",
     "icons": [
       {
-        "src": "logo-dr-pequena.png",
-        "sizes": "192x192",
+        "src": "/logo-dr-pequena.png",
+        "sizes": "192x122",
         "type": "image/png"
       },
       {
-        "src": "logo-dr-grande.png",
+        "src": "/logo-dr-grande.png",
         "sizes": "512x512",
         "type": "image/png"
       }
