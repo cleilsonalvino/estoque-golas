@@ -13,7 +13,7 @@ function Login() {
 
         const dados = { nome, senha };
 
-        fetch("http://192.168.0.3:3000/login", {
+        fetch("http://localhost:3000/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
