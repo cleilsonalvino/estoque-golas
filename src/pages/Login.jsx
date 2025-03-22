@@ -15,7 +15,6 @@ function Login() {
 
         fetch("https://estoque-golas-4tb04tffx-cleilsons-projects.vercel.app/login", {
             method: "POST",
-            mode: 'no-cors',
             headers: {
                 "Content-Type": "application/json"
             },
