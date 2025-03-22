@@ -13,7 +13,7 @@ function Login() {
 
         const dados = { nome, senha };
 
-        fetch("http://localhost:3000/login", {
+        fetch("https://estoque-golas-4tb04tffx-cleilsons-projects.vercel.app/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
