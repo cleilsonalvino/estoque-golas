@@ -5,7 +5,9 @@ import { PrismaClient } from '@prisma/client';
 const app = express();
 const prisma = new PrismaClient();
 
-app.use(cors()); // Permite qualquer origem acessar o seu backend
+app.use(cors({
+  origin: 'https://estoque-golas-f8742hhsx-cleilsons-projects.vercel.app'
+}));
 app.use(express.json());
 
 app.post("/login", async (req, res) => {
