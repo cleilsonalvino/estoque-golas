@@ -4,10 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "start": "vite preview",
-    "server": "node ./src/server/api.js",
+    "start": "npm run dev",
     "dev": "vite --host",
-    "build": "prisma generate && vite build",
+    "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
