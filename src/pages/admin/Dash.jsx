@@ -4,6 +4,7 @@ import NewUser from "./NewUser";
 import NavBar from "../../components/NavBar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
+import Footer from "../../components/Footer";
 
 function Dash() {
   const [dados, setDados] = useState([]); // Dados completos dos polos
@@ -98,7 +99,7 @@ function Dash() {
           />
           <button onClick={handleSearch}>Pesquisar</button>
         </div>
-        <div className="container mt-5">
+        <div className="container">
           <h2>Lista de Polos</h2>
           {loading ? (
             <div>Carregando...</div>
@@ -169,6 +170,7 @@ function Dash() {
         )}
         {editPolo && <div className="modal-backdrop fade show" onClick={() => setEditPolo(null)}></div>}
       </main>
+      <Footer/>
     </div>
   );
 }

@@ -1,8 +1,11 @@
 .contentDash{
     display: flex;
-    height: 90vh;
-    flex-flow: row wrap;
+    width: 100dvw;
+    flex-flow: column nowrap;
     justify-content: center;
+    position: relative;
+    background-color: rgb(226, 226, 226);
+    
 }
 
 .navbar{
@@ -11,26 +14,37 @@
 }
 
 .searchDados{
-    display: block;
-    width: 10%;
+    display: flex;
+    width: 100dvw;
+    align-items: center;
+    justify-content: space-between;
     margin: auto;
     text-align: center;
+    
+}
+.searchDados input {
+    height: 90%;
+    margin-left: 10px;
 }
 
 .acoesDash{
     display: flex;
+    width: 100dvw;
     justify-content: space-around;
     flex-flow: row wrap;
 }
 
-main{
-    height: 70%;
-    width: 90%;
+h2 {
+    margin-top: 20px;
+    text-align: center;
+    color: rgb(134, 134, 134);
 }
 
-table{
-    margin: 10px;
+main{
+    text-align: center;
+
 }
+
 
 button {
     margin: 10px;

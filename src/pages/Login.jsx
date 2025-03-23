@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./css/login.css";
+import Footer from "../components/Footer";
 
 function Login() {
     const [nome, setNome] = useState("");
@@ -72,6 +73,7 @@ function Login() {
                 </span>
                 <input className="submit" type="submit" value="Entrar" />
             </form>
+            <Footer/>
         </div>
     );
 }

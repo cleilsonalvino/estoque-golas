@@ -81,9 +81,9 @@ function NewUserModal() {
                   />
                 </div>
 
-                <div className="mb-3">
+                <div className="mb-3 d-flex align-items-center">
                   <p className="form-label">É admin?</p>
-                  <div className="form-check">
+                  <div className="form-check d-flex align-items-center">
                     <input
                       type="radio"
                       name="eadmin"
@@ -91,13 +91,13 @@ function NewUserModal() {
                       value={1}
                       checked={eAdmin === 1}
                       onChange={() => setEAdmin(1)}
-                      className="form-check-input"
+                      className="m-3"
                     />
                     <label htmlFor="sim" className="form-check-label">
                       Sim
                     </label>
                   </div>
-                  <div className="form-check">
+                  <div className="form-check d-flex align-items-center">
                     <input
                       type="radio"
                       name="eadmin"
@@ -105,7 +105,7 @@ function NewUserModal() {
                       value={0}
                       checked={eAdmin === 0}
                       onChange={() => setEAdmin(0)}
-                      className="form-check-input"
+                      className="m-3"
                     />
                     <label htmlFor="nao" className="form-check-label">
                       Não

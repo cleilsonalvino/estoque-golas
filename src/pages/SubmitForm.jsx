@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import './css/submit.css';
+import "./css/submit.css";
 import NavBar from "../components/NavBar";
+import Footer from "../components/Footer";
 
 // Componente para registrar a entrada/saída de um polo
 function SubmitForm() {
@@ -46,13 +47,16 @@ function SubmitForm() {
     };
 
     try {
-      const response = await fetch("https://estoque-golas-server.onrender.com/estoque", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(dados),
-      });
+      const response = await fetch(
+        "https://estoque-golas-server.onrender.com/estoque",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(dados),
+        }
+      );
       const result = await response.json();
       if (result.success) {
         alert("Entrada/saída registrada com sucesso!");
@@ -69,82 +73,81 @@ function SubmitForm() {
   // Exibição do formulário
   return (
     <div>
-      <NavBar/>
+      <NavBar />
       <div className="estoquePolo">
-      
-      <h2>Registrar Entrada/Saída do Polo</h2>
-      
-      {/* Exibe a mensagem de erro se existir */}
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
+        <h2>Registrar Entrada/Saída do Polo</h2>
 
-      {/* Exibe o carregamento enquanto os polos estão sendo buscados */}
-      {isLoading ? (
-        <p>Carregando polos...</p>
-      ) : (
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="codigoPolo">Código do Polo:</label>
-            <select
-              id="codigoPolo"
-              value={codigoPolo}
-              onChange={(e) => setCodigoPolo(e.target.value)}
-              required
-            >
-              <option value="">Selecione um Polo</option>
-              {polos.map((polo) => (
-                <option key={polo.codigo} value={polo.codigo}>
-                  {polo.codigo} - {polo.cor}
-                </option>
-              ))}
-            </select>
-          </div>
+        {/* Exibe a mensagem de erro se existir */}
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
 
-          <div>
-            <label htmlFor="quantidade">Quantidade:</label>
-            <input
-              type="number"
-              id="quantidade"
-              value={quantidade}
-              onChange={(e) => setQuantidade(Number(e.target.value))}
-              min="1"
-              required
-            />
-          </div>
+        {/* Exibe o carregamento enquanto os polos estão sendo buscados */}
+        {isLoading ? (
+          <p>Carregando polos...</p>
+        ) : (
+          <form onSubmit={handleSubmit}>
+            <div>
+              <label htmlFor="codigoPolo">Código do Polo:</label>
+              <select
+                id="codigoPolo"
+                value={codigoPolo}
+                onChange={(e) => setCodigoPolo(e.target.value)}
+                required
+              >
+                <option value="">Selecione um Polo</option>
+                {polos.map((polo) => (
+                  <option key={polo.codigo} value={polo.codigo}>
+                    {polo.codigo} - {polo.cor}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-          <div>
-            <label htmlFor="tipo">Tipo de Ação:</label>
-            <select
-              id="tipo"
-              value={tipo}
-              onChange={(e) => setTipo(e.target.value)}
-              required
-            >
-              <option value="">Selecione Tipo de Ação</option>
-              <option value="entrada">Entrada</option>
-              <option value="saida">Saída</option>
-            </select>
-          </div>
+            <div>
+              <label htmlFor="quantidade">Quantidade:</label>
+              <input
+                type="number"
+                id="quantidade"
+                value={quantidade}
+                onChange={(e) => setQuantidade(Number(e.target.value))}
+                min="1"
+                required
+              />
+            </div>
 
-          <div>
-            <label htmlFor="golaPunho">Selecione o Tipo:</label>
-            <select
-              id="golaPunho"
-              value={golaPunho}
-              onChange={(e) => setGolaPunho(e.target.value)}
-              required
-            >
-              <option value="">Selecione Gola ou Punho</option>
-              <option value="gola">Gola</option>
-              <option value="punho">Punho</option>
-            </select>
-          </div>
+            <div>
+              <label htmlFor="tipo">Tipo de Ação:</label>
+              <select
+                id="tipo"
+                value={tipo}
+                onChange={(e) => setTipo(e.target.value)}
+                required
+              >
+                <option value="">Selecione Tipo de Ação</option>
+                <option value="entrada">Entrada</option>
+                <option value="saida">Saída</option>
+              </select>
+            </div>
 
-          <button type="submit">Registrar</button>
-        </form>
-      )}
+            <div>
+              <label htmlFor="golaPunho">Selecione o Tipo:</label>
+              <select
+                id="golaPunho"
+                value={golaPunho}
+                onChange={(e) => setGolaPunho(e.target.value)}
+                required
+              >
+                <option value="">Selecione Gola ou Punho</option>
+                <option value="gola">Gola</option>
+                <option value="punho">Punho</option>
+              </select>
+            </div>
+
+            <button type="submit">Registrar</button>
+          </form>
+        )}
+      </div>
+      <Footer/>
     </div>
-    </div>
-
   );
 }
 
