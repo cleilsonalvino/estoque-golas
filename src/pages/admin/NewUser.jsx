@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css"; // Necessário para os estilos do Bootstrap
-import "bootstrap/dist/js/bootstrap.bundle.min.js"; // Necessário para o modal funcionar
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 function NewUserModal() {
   const [nome, setNome] = useState("");
-  const [eAdmin, setEAdmin] = useState(0); // Inicia com 0
+  const [eAdmin, setEAdmin] = useState(0);
+  const [errorMessage, setErrorMessage] = useState("");
 
   function adicionarUsuario() {
     const dados = {
       nome: nome,
-      eadmin: eAdmin, // Enviando 0 ou 1
+      eadmin: eAdmin,
     };
 
     fetch("https://estoque-golas-server.onrender.com/novousuario", {
@@ -27,15 +28,23 @@ function NewUserModal() {
       })
       .then((data) => {
         console.log("Dados salvos!", data);
-        setNome(""); // Limpa o nome
-        setEAdmin(0); // Reseta a opção de admin para 0
+        setNome("");
+        setEAdmin(0);
+        setErrorMessage("");
+
+        // Fechar modal automaticamente
+        const modalElement = document.getElementById("newUserModal");
+        const modalInstance = bootstrap.Modal.getInstance(modalElement);
+        modalInstance.hide();
       })
-      .catch((error) => console.error("Erro:", error));
+      .catch((error) => {
+        console.error("Erro:", error);
+        setErrorMessage("Erro ao adicionar usuário. Tente novamente.");
+      });
   }
 
   return (
     <>
-      {/* Botão para abrir o modal */}
       <button
         type="button"
         className="btn btn-primary"
@@ -45,7 +54,6 @@ function NewUserModal() {
         Criar Novo Usuário
       </button>
 
-      {/* Modal */}
       <div
         className="modal fade"
         id="newUserModal"
@@ -67,6 +75,9 @@ function NewUserModal() {
               ></button>
             </div>
             <div className="modal-body">
+              {errorMessage && (
+                <div className="alert alert-danger">{errorMessage}</div>
+              )}
               <form>
                 <div className="mb-3">
                   <label htmlFor="nome" className="form-label">

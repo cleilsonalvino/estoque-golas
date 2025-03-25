@@ -9,7 +9,7 @@ function NavBar() {
 
   return (
     <div className="w-100 mt-4 p-2">
-      <a href="/" onClick={logout}>
+      <a href="/" onClick={logout} className="btn">
         Sair
       </a>
     </div>

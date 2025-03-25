@@ -5,8 +5,10 @@
     justify-content: center;
     position: relative;
     background-color: rgb(226, 226, 226);
+    overflow-y: hidden;
     
 }
+
 
 .navbar{
     width: 100%;
@@ -15,7 +17,7 @@
 
 .searchDados{
     display: flex;
-    width: 100dvw;
+    width: 90dvw;
     align-items: center;
     justify-content: space-between;
     margin: auto;
@@ -29,7 +31,7 @@
 
 .acoesDash{
     display: flex;
-    width: 100dvw;
+    width: 90dvw;
     justify-content: space-around;
     flex-flow: row wrap;
 }

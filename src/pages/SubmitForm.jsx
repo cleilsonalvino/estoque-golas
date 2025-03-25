@@ -30,6 +30,9 @@ function SubmitForm() {
       });
   }, []);
 
+  const poloSelecionado = polos.find((polo) => polo.codigo === codigoPolo);
+
+
   // Função para enviar os dados da entrada/saída
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -72,7 +75,7 @@ function SubmitForm() {
 
   // Exibição do formulário
   return (
-    <div>
+    <div className="content">
       <NavBar />
       <div className="estoquePolo">
         <h2>Registrar Entrada/Saída do Polo</h2>
@@ -100,6 +103,9 @@ function SubmitForm() {
                   </option>
                 ))}
               </select>
+              <div>Quantidade Gola: {poloSelecionado ? poloSelecionado.gola.quantidade : "Selecione um polo"}</div>
+<div>Quantidade Punho: {poloSelecionado ? poloSelecionado.punho.quantidade : "Selecione um polo"}</div>
+
             </div>
 
             <div>
