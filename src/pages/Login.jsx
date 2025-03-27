@@ -7,6 +7,7 @@ function Login() {
   const [nome, setNome] = useState("");
   const [senha, setSenha] = useState("");
   const [carregando, setCarregando] = useState(false); // Estado para o loader
+  const [mostrarSenha, setMostrarSenha] = useState(false); // Estado para mostrar/esconder a senha
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -51,6 +52,11 @@ function Login() {
       });
   }
 
+  // Função para alternar a visibilidade da senha
+  const toggleMostrarSenha = () => {
+    setMostrarSenha(!mostrarSenha);
+  };
+
   return (
     <div className="TelaLogin">
       <h1>Controle de Estoque</h1>
@@ -72,13 +78,22 @@ function Login() {
           <label htmlFor="senha" className="label">
             Senha
           </label>
-          <input
-            type="password"
-            name="senha"
-            id="senha"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-          />
+          <div className="password-container">
+            <input
+              type={mostrarSenha ? "text" : "password"} // Alterna entre text e password
+              name="senha"
+              id="senha"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+            />
+            <button
+              type="button" // Evita que o botão envie o formulário
+              className="mostrar-senha-btn"
+              onClick={toggleMostrarSenha}
+            >
+              {mostrarSenha ? "Esconder" : "Mostrar"}
+            </button>
+          </div>
         </span>
         <input className="submit" type="submit" value="Entrar" />
         

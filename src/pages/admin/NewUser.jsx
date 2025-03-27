@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
@@ -6,14 +6,31 @@ function NewUserModal() {
   const [nome, setNome] = useState("");
   const [eAdmin, setEAdmin] = useState(0);
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const modalRef = useRef(null);
+
+  // Resetar o formulário e mensagens ao abrir o modal
+  useEffect(() => {
+    const modalElement = modalRef.current;
+    const handleShow = () => {
+      setNome("");
+      setEAdmin(0);
+      setSuccessMessage("");
+      setErrorMessage("");
+    };
+    modalElement.addEventListener("shown.bs.modal", handleShow);
+    return () => {
+      modalElement.removeEventListener("shown.bs.modal", handleShow);
+    };
+  }, []);
 
   function adicionarUsuario() {
     const dados = {
       nome: nome,
-      eadmin: eAdmin,
+      Eadmin: eAdmin,
     };
 
-    fetch("https://estoque-golas-server.onrender.com/novousuario", {
+    fetch("http://estoque-golas-server.onrender.com/login/novousuario", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -22,20 +39,19 @@ function NewUserModal() {
     })
       .then((response) => {
         if (!response.ok) {
+          console.log(dados);
           throw new Error("Erro ao salvar os dados");
         }
         return response.json();
       })
       .then((data) => {
         console.log("Dados salvos!", data);
+        // Exibir mensagem de sucesso e limpar o formulário
+        setSuccessMessage("Usuário adicionado com sucesso!");
         setNome("");
         setEAdmin(0);
         setErrorMessage("");
-
-        // Fechar modal automaticamente
-        const modalElement = document.getElementById("newUserModal");
-        const modalInstance = bootstrap.Modal.getInstance(modalElement);
-        modalInstance.hide();
+        // Não fechar o modal automaticamente
       })
       .catch((error) => {
         console.error("Erro:", error);
@@ -60,6 +76,7 @@ function NewUserModal() {
         tabIndex="-1"
         aria-labelledby="newUserModalLabel"
         aria-hidden="true"
+        ref={modalRef}
       >
         <div className="modal-dialog">
           <div className="modal-content">
@@ -75,6 +92,11 @@ function NewUserModal() {
               ></button>
             </div>
             <div className="modal-body">
+              {/* Exibir mensagem de sucesso */}
+              {successMessage && (
+                <div className="alert alert-success">{successMessage}</div>
+              )}
+              {/* Exibir mensagem de erro */}
               {errorMessage && (
                 <div className="alert alert-danger">{errorMessage}</div>
               )}
@@ -88,7 +110,10 @@ function NewUserModal() {
                     id="nome"
                     className="form-control"
                     value={nome}
-                    onChange={(e) => setNome(e.target.value)}
+                    onChange={(e) => {
+                      setNome(e.target.value);
+                      setSuccessMessage(""); // Limpar mensagem de sucesso ao digitar
+                    }}
                   />
                 </div>
 

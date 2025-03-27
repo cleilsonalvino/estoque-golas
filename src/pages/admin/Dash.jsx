@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import NewPolo from "./NewPolo";
 import NewUser from "./NewUser";
 import NavBar from "../../components/NavBar";
+import ListUsers from "./ListUsers";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 import Footer from "../../components/Footer";
@@ -11,7 +12,7 @@ function Dash() {
   const [filteredDados, setFilteredDados] = useState([]); // Dados filtrados pela pesquisa
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState(''); // Termo de pesquisa
+  const [searchTerm, setSearchTerm] = useState(""); // Termo de pesquisa
   const [editPolo, setEditPolo] = useState(null);
 
   // Função para buscar os dados
@@ -21,7 +22,7 @@ function Dash() {
       if (!response.ok) throw new Error(`Erro ao buscar os dados: ${response.status}`);
       
       const data = await response.json();
-      console.log("Dados recebidos:", data); // <--- Verificar o que está vindo
+      console.log("Dados recebidos:", data);
       
       setDados(data);
       setFilteredDados(data);
@@ -32,22 +33,29 @@ function Dash() {
       setLoading(false);
     }
   };
-  
 
   useEffect(() => {
     fetchDados();
   }, []);
 
-  // Função para filtrar os dados com base no termo de pesquisa
-  const handleSearch = () => {
-    if (searchTerm === '') {
-      setFilteredDados(dados); // Se não houver termo de pesquisa, mostra todos os dados
+  // Função para filtrar os dados com base no termo de pesquisa (cor ou código)
+  const handleSearch = (term) => {
+    if (term === "") {
+      setFilteredDados(dados); // Se o termo estiver vazio, mostra todos os dados
     } else {
       const results = dados.filter((item) =>
-        item.cor.toLowerCase().includes(searchTerm.toLowerCase())
+        item.cor.toLowerCase().includes(term.toLowerCase()) || // Pesquisa por cor
+        String(item.codigo).includes(term) // Pesquisa por código (convertido para string)
       );
       setFilteredDados(results); // Atualiza os dados filtrados
     }
+  };
+
+  // Atualiza o termo de pesquisa e filtra os dados em tempo real
+  const handleSearchChange = (e) => {
+    const term = e.target.value;
+    setSearchTerm(term);
+    handleSearch(term); // Chama a função de filtragem diretamente
   };
 
   const handleUpdatePolo = async (e) => {
@@ -89,15 +97,22 @@ function Dash() {
         <div className="acoesDash">
           <NewPolo refreshDados={fetchDados} />
           <NewUser />
+          <ListUsers />
         </div>
-        <div className="searchDados">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Digite a cor da polo"
-          />
-          <button onClick={handleSearch}>Pesquisar</button>
+        <div className="searchDados mb-3">
+          <div className="input-group">
+            <label htmlFor="searchInput" className="input-group-text">
+              Pesquisar:
+            </label>
+            <input
+              id="searchInput"
+              type="text"
+              value={searchTerm}
+              onChange={handleSearchChange} // Filtra enquanto digita
+              placeholder="Digite a cor ou código da polo"
+              className="form-control"
+            />
+          </div>
         </div>
         <div className="container">
           <h2>Lista de Polos</h2>
@@ -170,7 +185,7 @@ function Dash() {
         )}
         {editPolo && <div className="modal-backdrop fade show" onClick={() => setEditPolo(null)}></div>}
       </main>
-      <Footer/>
+      <Footer />
     </div>
   );
 }

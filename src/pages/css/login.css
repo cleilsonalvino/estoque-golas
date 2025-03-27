@@ -117,3 +117,29 @@
     transform: rotate(360deg);
   }
 }
+
+.password-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-container input {
+  flex: 1; /* Faz o input ocupar o espaço disponível */
+  padding-right: 80px; /* Espaço para o botão não sobrepor o texto */
+}
+
+.mostrar-senha-btn {
+  position: absolute;
+  right: 5px; /* Distância da borda direita do container */
+  background: none;
+  border: none;
+  color: #007bff; /* Cor do texto, pode ajustar */
+  cursor: pointer;
+  padding: 5px 10px;
+  font-size: 14px;
+}
+
+.mostrar-senha-btn:hover {
+  text-decoration: underline; /* Efeito ao passar o mouse */
+}
