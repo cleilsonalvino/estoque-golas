@@ -22,7 +22,7 @@ function Login() {
 
     const dados = { nome, senha };
 
-    fetch("https://estoque-golas-server.onrender.com/login", {
+    fetch("http://3.17.153.198:4000/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

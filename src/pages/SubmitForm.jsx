@@ -17,7 +17,7 @@ function SubmitForm() {
 
   // Carregar os polos disponíveis
   useEffect(() => {
-    fetch("https://estoque-golas-server.onrender.com/trazer-dados") // Chame sua API para obter os polos
+    fetch("https://3.17.153.198:4000/trazer-dados") // Chame sua API para obter os polos
       .then((response) => response.json())
       .then((data) => {
         setPolos(data);
