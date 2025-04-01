@@ -51,7 +51,7 @@ function SubmitForm() {
 
     try {
       const response = await fetch(
-        "https://estoque-golas-server.onrender.com/estoque",
+        "https://3.17.153.198:4000/estoque",
         {
           method: "POST",
           headers: {
