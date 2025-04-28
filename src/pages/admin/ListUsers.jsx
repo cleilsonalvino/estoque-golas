@@ -11,7 +11,7 @@ function UserListModal() {
   // Função para buscar a lista de usuários
   const fetchUsuarios = () => {
     setLoading(true);
-    fetch("http://3.17.153.198:4000/usuarios", {
+    fetch("http://localhost:4000/usuarios", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
