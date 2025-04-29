@@ -17,7 +17,7 @@ function SubmitForm() {
 
   // Carregar os polos disponíveis
   useEffect(() => {
-    fetch("http://localhost:4000/trazer-dados") // Chame sua API para obter os polos
+    fetch("http://168.231.95.166:4000/trazer-dados") // Chame sua API para obter os polos
       .then((response) => response.json())
       .then((data) => {
         setPolos(data);
@@ -51,7 +51,7 @@ function SubmitForm() {
 
     try {
       const response = await fetch(
-        "http://localhost:4000/estoque",
+        "http://168.231.95.166:4000/estoque",
         {
           method: "POST",
           headers: {

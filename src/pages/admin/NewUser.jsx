@@ -30,7 +30,7 @@ function NewUserModal() {
       Eadmin: eAdmin,
     };
 
-    fetch("http://localhost:4000/novousuario", {
+    fetch("http://168.231.95.166:4000/novousuario", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -11,7 +11,7 @@ function UserListModal() {
   // Função para buscar a lista de usuários
   const fetchUsuarios = () => {
     setLoading(true);
-    fetch("http://localhost:4000/usuarios", {
+    fetch("http://168.231.95.166:4000/usuarios", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -39,7 +39,7 @@ function UserListModal() {
   const deletarUsuario = (id) => {
     if (!confirm("Tem certeza que deseja excluir este usuário?")) return;
 
-    fetch(`http://3.17.153.198:4000/login/usuarios/${id}`, {
+    fetch(`http://168.231.95.166:4000/login/usuarios/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
