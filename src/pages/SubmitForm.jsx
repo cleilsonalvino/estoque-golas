@@ -1,158 +1,196 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Select from "react-select";
+import { Container, Card, Form, Button, Row, Col, Spinner, Alert } from "react-bootstrap";
+import { FaArrowDown, FaArrowUp, FaTshirt, FaImage } from 'react-icons/fa'; // -> Adicionei FaImage
+import { GiRolledCloth } from "react-icons/gi";
 import "./css/submit.css";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 
-// Componente para registrar a entrada/saída de um polo
+// -> INÍCIO DA MUDANÇA
+// Função para customizar a aparência de cada opção na lista do Select
+const formatOptionLabel = ({ label, foto }) => (
+  <div className="select-option-container">
+    {foto ? (
+      <img src={`http://168.231.95.166:4000${foto}`} alt="" className="select-option-image" />
+    ) : (
+      <div className="select-option-placeholder"><FaImage /></div>
+    )}
+    <span>{label}</span>
+  </div>
+);
+// -> FIM DA MUDANÇA
+
 function SubmitForm() {
+  // ... (nenhuma mudança nos seus 'useState' e 'useEffect')
   const [codigoPolo, setCodigoPolo] = useState("");
-  const [quantidade, setQuantidade] = useState(0);
-  const [tipo, setTipo] = useState(""); // "entrada" ou "saida"
-  const [golaPunho, setGolaPunho] = useState(""); // "gola" ou "punho"
+  const [quantidade, setQuantidade] = useState("");
+  const [tipo, setTipo] = useState("entrada");
+  const [golaPunho, setGolaPunho] = useState("gola");
   const [polos, setPolos] = useState([]);
-  const [isLoading, setIsLoading] = useState(true); // Estado de carregamento
-  const [errorMessage, setErrorMessage] = useState(""); // Para mostrar erros
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [notification, setNotification] = useState({ show: false, message: "", variant: "" });
   const navigate = useNavigate();
 
-  // Carregar os polos disponíveis
   useEffect(() => {
-    fetch("http://168.231.95.166:4000/trazer-dados") // Chame sua API para obter os polos
+    fetch("http://168.231.95.166:4000/trazer-dados")
       .then((response) => response.json())
       .then((data) => {
         setPolos(data);
-        setIsLoading(false); // Termina o carregamento após dados serem obtidos
+        setIsLoading(false);
       })
       .catch((error) => {
         console.error("Erro ao carregar os polos:", error);
-        setErrorMessage("Erro ao carregar os polos. Tente novamente.");
-        setIsLoading(false); // Termina o carregamento mesmo em erro
+        setNotification({ show: true, message: "Erro ao carregar os polos. Tente novamente.", variant: "danger" });
+        setIsLoading(false);
       });
   }, []);
 
+  // -> INÍCIO DA MUDANÇA
+  // Garante que a propriedade 'foto' esteja disponível em cada opção
+  const poloOptions = polos.map(polo => ({
+    value: polo.codigo,
+    label: `${polo.codigo} - ${polo.cor}`,
+    foto: polo.foto, // Passamos a URL da foto para ser usada na customização
+  }));
+  // -> FIM DA MUDANÇA
+
   const poloSelecionado = polos.find((polo) => polo.codigo === codigoPolo);
 
-
-  // Função para enviar os dados da entrada/saída
   const handleSubmit = async (e) => {
+    // ... (nenhuma mudança na função handleSubmit)
     e.preventDefault();
-
+    if (!codigoPolo || !tipo || !golaPunho) {
+      setNotification({ show: true, message: "Por favor, preencha todos os campos.", variant: "warning" });
+      return;
+    }
     if (quantidade <= 0) {
-      setErrorMessage("A quantidade deve ser maior que zero.");
+      setNotification({ show: true, message: "A quantidade deve ser maior que zero.", variant: "warning" });
       return;
     }
 
-    const dados = {
-      codigoPolo,
-      quantidade,
-      tipo,
-      golaPunho,
-    };
+    setIsSubmitting(true);
+    setNotification({ show: false, message: "", variant: "" });
 
     try {
-      const response = await fetch(
-        "http://168.231.95.166:4000/estoque",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(dados),
-        }
-      );
+      const response = await fetch("http://168.231.95.166:4000/estoque", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ codigoPolo, quantidade, tipo, golaPunho }),
+      });
       const result = await response.json();
       if (result.success) {
-        alert("Entrada/saída registrada com sucesso!");
-        navigate("/dashboard"); // Ou outra página de sua escolha
+        setNotification({ show: true, message: "Operação registrada com sucesso!", variant: "success" });
+        setTimeout(() => navigate("/dashboard"), 1500);
       } else {
-        setErrorMessage("Erro ao registrar entrada/saída.");
+        setNotification({ show: true, message: result.message || "Erro ao registrar a operação.", variant: "danger" });
       }
     } catch (error) {
-      console.error("Erro ao enviar dados:", error);
-      setErrorMessage("Erro ao processar a requisição. Tente novamente.");
+      setNotification({ show: true, message: "Erro de conexão. Tente novamente.", variant: "danger" });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  // Exibição do formulário
   return (
-    <div className="content">
+    <div className="submit-page">
       <NavBar />
-      <div className="estoquePolo">
-        <h2>Registrar Entrada/Saída do Polo</h2>
+      <Container className="submit-container">
+        <Card className="submit-card">
+          <Card.Header>
+            <Card.Title>Registrar Movimentação de Estoque</Card.Title>
+          </Card.Header>
+          <Card.Body>
+            {notification.show && (
+              <Alert variant={notification.variant} onClose={() => setNotification({ show: false })} dismissible>
+                {notification.message}
+              </Alert>
+            )}
+            
+            <Form onSubmit={handleSubmit}>
+              <Form.Group className="form-group">
+                <Form.Label>Selecione o Polo</Form.Label>
+                <Select
+                  options={poloOptions}
+                  isLoading={isLoading}
+                  placeholder="Digite para buscar um código ou cor..."
+                  onChange={(option) => setCodigoPolo(option ? option.value : "")} // Adicionado verificação para 'limpar'
+                  isClearable
+                  noOptionsMessage={() => "Nenhum polo encontrado"}
+                  // -> INÍCIO DA MUDANÇA
+                  // Aqui aplicamos nossa função de customização
+                  formatOptionLabel={formatOptionLabel}
+                  // -> FIM DA MUDANÇA
+                />
+              </Form.Group>
+              
+              {/* O resto do seu JSX permanece o mesmo */}
+              <div className={`polo-info-panel ${!poloSelecionado && 'hidden'}`}>
+                {poloSelecionado && (
+                  <>
+                    <img src={`http://168.231.95.166:4000${poloSelecionado.foto}`} alt={poloSelecionado.cor} />
+                    <div className="polo-stock-details">
+                      <h5>{poloSelecionado.cor}</h5>
+                      <Row>
+                        <Col className="stock-item">Gola: <strong>{poloSelecionado.gola.quantidade}</strong></Col>
+                        <Col className="stock-item">Punho: <strong>{poloSelecionado.punho.quantidade}</strong></Col>
+                      </Row>
+                    </div>
+                  </>
+                )}
+              </div>
 
-        {/* Exibe a mensagem de erro se existir */}
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
+              <Row className="mt-4">
+                <Col md={6}>
+                  <Form.Group className="form-group">
+                    <Form.Label>Tipo de Movimentação</Form.Label>
+                    <div className="segmented-control">
+                      <Button onClick={() => setTipo('entrada')} className={tipo === 'entrada' ? 'active' : ''}><FaArrowDown /> Entrada</Button>
+                      <Button onClick={() => setTipo('saida')} className={tipo === 'saida' ? 'active' : ''}><FaArrowUp /> Saída</Button>
+                    </div>
+                  </Form.Group>
+                </Col>
+                <Col md={6}>
+                   <Form.Group className="form-group">
+                    <Form.Label>Item</Form.Label>
+                    <div className="segmented-control">
+                      <Button onClick={() => setGolaPunho('gola')} className={golaPunho === 'gola' ? 'active' : ''}><FaTshirt /> Gola</Button>
+                      <Button onClick={() => setGolaPunho('punho')} className={golaPunho === 'punho' ? 'active' : ''}><GiRolledCloth /> Punho</Button>
+                    </div>
+                  </Form.Group>
+                </Col>
+              </Row>
 
-        {/* Exibe o carregamento enquanto os polos estão sendo buscados */}
-        {isLoading ? (
-          <p>Carregando polos...</p>
-        ) : (
-          <form onSubmit={handleSubmit}>
-            <div>
-              <label htmlFor="codigoPolo">Código do Polo:</label>
-              <select
-                id="codigoPolo"
-                value={codigoPolo}
-                onChange={(e) => setCodigoPolo(e.target.value)}
-                required
-              >
-                <option value="">Selecione um Polo</option>
-                {polos.map((polo) => (
-                  <option key={polo.codigo} value={polo.codigo}>
-                    {polo.codigo} - {polo.cor}
-                  </option>
-                ))}
-              </select>
-              <div>Quantidade Gola: {poloSelecionado ? poloSelecionado.gola.quantidade : "Selecione um polo"}</div>
-<div>Quantidade Punho: {poloSelecionado ? poloSelecionado.punho.quantidade : "Selecione um polo"}</div>
+              <Form.Group className="form-group">
+                <Form.Label htmlFor="quantidade">Quantidade</Form.Label>
+                <Form.Control
+                  type="number"
+                  id="quantidade"
+                  value={quantidade}
+                  onChange={(e) => setQuantidade(Number(e.target.value))}
+                  min="1"
+                  placeholder="0"
+                  required
+                />
+              </Form.Group>
 
-            </div>
-
-            <div>
-              <label htmlFor="quantidade">Quantidade:</label>
-              <input
-                type="number"
-                id="quantidade"
-                value={quantidade}
-                onChange={(e) => setQuantidade(Number(e.target.value))}
-                min="1"
-                required
-              />
-            </div>
-
-            <div>
-              <label htmlFor="tipo">Tipo de Ação:</label>
-              <select
-                id="tipo"
-                value={tipo}
-                onChange={(e) => setTipo(e.target.value)}
-                required
-              >
-                <option value="">Selecione Tipo de Ação</option>
-                <option value="entrada">Entrada</option>
-                <option value="saida">Saída</option>
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="golaPunho">Selecione o Tipo:</label>
-              <select
-                id="golaPunho"
-                value={golaPunho}
-                onChange={(e) => setGolaPunho(e.target.value)}
-                required
-              >
-                <option value="">Selecione Gola ou Punho</option>
-                <option value="gola">Gola</option>
-                <option value="punho">Punho</option>
-              </select>
-            </div>
-
-            <button type="submit">Registrar</button>
-          </form>
-        )}
-      </div>
-      <Footer/>
+              <div className="d-grid mt-4">
+                <Button variant="primary" type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? (
+                    <>
+                      <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
+                      {" "}Registrando...
+                    </>
+                  ) : "Registrar Movimentação"}
+                </Button>
+              </div>
+            </Form>
+          </Card.Body>
+        </Card>
+      </Container>
+      <Footer />
     </div>
   );
 }
