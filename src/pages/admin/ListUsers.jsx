@@ -11,7 +11,7 @@ function UserListModal() {
   // Função para buscar a lista de usuários
   const fetchUsuarios = () => {
     setLoading(true);
-    fetch("http://168.231.95.166:4000/usuarios", {
+    fetch("https://api-drf-golas.cleilsonalvino.com.br/usuarios", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -39,7 +39,7 @@ function UserListModal() {
   const deletarUsuario = (id) => {
     if (!confirm("Tem certeza que deseja excluir este usuário?")) return;
 
-    fetch(`http://168.231.95.166:4000/login/usuarios/${id}`, {
+    fetch(`https://api-drf-golas.cleilsonalvino.com.br/login/usuarios/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

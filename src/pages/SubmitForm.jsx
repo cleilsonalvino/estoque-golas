@@ -13,7 +13,7 @@ import Footer from "../components/Footer";
 const formatOptionLabel = ({ label, foto }) => (
   <div className="select-option-container">
     {foto ? (
-      <img src={`http://168.231.95.166:4000${foto}`} alt="" className="select-option-image" />
+      <img src={`https://api-drf-golas.cleilsonalvino.com.br${foto}`} alt="" className="select-option-image" />
     ) : (
       <div className="select-option-placeholder"><FaImage /></div>
     )}
@@ -35,7 +35,7 @@ function SubmitForm() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://168.231.95.166:4000/trazer-dados")
+    fetch("https://api-drf-golas.cleilsonalvino.com.br/trazer-dados")
       .then((response) => response.json())
       .then((data) => {
         setPolos(data);
@@ -75,7 +75,7 @@ function SubmitForm() {
     setNotification({ show: false, message: "", variant: "" });
 
     try {
-      const response = await fetch("http://168.231.95.166:4000/estoque", {
+      const response = await fetch("https://api-drf-golas.cleilsonalvino.com.br/estoque", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ codigoPolo, quantidade, tipo, golaPunho }),
@@ -130,7 +130,7 @@ function SubmitForm() {
               <div className={`polo-info-panel ${!poloSelecionado && 'hidden'}`}>
                 {poloSelecionado && (
                   <>
-                    <img src={`http://168.231.95.166:4000${poloSelecionado.foto}`} alt={poloSelecionado.cor} />
+                    <img src={`https://api-drf-golas.cleilsonalvino.com.br${poloSelecionado.foto}`} alt={poloSelecionado.cor} />
                     <div className="polo-stock-details">
                       <h5>{poloSelecionado.cor}</h5>
                       <Row>

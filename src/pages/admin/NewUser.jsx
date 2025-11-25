@@ -30,7 +30,7 @@ function NewUserModal() {
       Eadmin: eAdmin,
     };
 
-    fetch("http://168.231.95.166:4000/novousuario", {
+    fetch("https://api-drf-golas.cleilsonalvino.com.br/novousuario", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

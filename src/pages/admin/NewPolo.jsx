@@ -28,7 +28,7 @@ function NewPoloModal({refreshDados}) {
     setResponse(null);
 
     try {
-      const res = await fetch("https://168.231.95.166:4000/polos", {
+      const res = await fetch("https://api-drf-golas.cleilsonalvino.com.br/polos", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

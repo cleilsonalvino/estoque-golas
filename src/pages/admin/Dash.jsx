@@ -21,7 +21,7 @@ function Dash() {
   // Estado para armazenar o arquivo da foto selecionada no modal
   const [fotoFile, setFotoFile] = useState(null);
 
-  const API_URL = "http://168.231.95.166:4000";
+  const API_URL = "https://api-drf-golas.cleilsonalvino.com.br";
 
   // Função para buscar todos os dados dos polos
   const fetchDados = async () => {

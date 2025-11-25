@@ -22,7 +22,7 @@ function Login() {
 
     const dados = { nome, senha };
 
-    fetch("http://168.231.95.166:4000/login", {
+    fetch("https://api-drf-golas.cleilsonalvino.com.br/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

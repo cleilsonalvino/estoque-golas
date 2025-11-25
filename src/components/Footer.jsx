@@ -8,7 +8,7 @@ function Footer() {
 
   return (
     <footer style={estilo}>
-        <p>Criado por <a href="https://www.cleilsonalvino.com/" target='_blank'>Cleilson Alvino</a></p>
+        <p>Criado por <a href="https://www.cleilsonalvino.com.br/" target='_blank'>Cleilson Alvino</a></p>
     </footer>
   )
 }
